@@ -47,7 +47,8 @@ class DB:
             cur.execute(sql)
             conn.commit()
         except:
-            logger.log_error("sql excute error:\nsql:%s\nhargs:%s" % (sql, ())
+            logger.log_error("sql excute error:\n\rsql:%s\n\thargs:%s" % (sql, ()))
+            raise
         return conn, cur
             
     @mysql_retry_func("failed to execute sql to host %s, db %s" % (db_settings.host, db_settings.database))
@@ -57,7 +58,7 @@ class DB:
             self.conn.commit()
             return self.cur
         except:
-            logger.log_error("sql excute error:\nsql:%s\nhargs:%s" % (sql, hargs))
+            logger.log_error("sql excute error:\n\tsql:%s\n\thargs:%s" % (sql, hargs))
             raise
 
 db = DB()
