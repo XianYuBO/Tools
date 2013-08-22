@@ -43,18 +43,22 @@ class DB:
         conn.select_db(db_settings.database)
         cur = conn.cursor()
         sql = "set names utf8"
-        cur.execute(sql)
+        self.db_execute(sql)
         return conn, cur
             
     @mysql_retry_func("failed to execute sql to host %s, db %s" % (db_settings.host, db_settings.database))
     def db_execute(self, sql, hargs=()):
-        self.cur.execute(sql, hargs)
-        self.conn.commit()
-        return self.cur
+        try:
+            self.cur.execute(sql, hargs)
+            self.conn.commit()
+            return self.cur
+        except:
+            logger.log_error("sql excute error:\nsql:%s\nhargs:%s" % (sql, hargs))
+            raise
 
 db = DB()
         
 if __name__ == "__main__":
-    l = db.db_execute("descd t_field;")
+    l = db.db_execute("descd t_field %s")
     for i in l:
         print i
