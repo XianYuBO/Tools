@@ -43,7 +43,11 @@ class DB:
         conn.select_db(db_settings.database)
         cur = conn.cursor()
         sql = "set names utf8"
-        self.db_execute(sql)
+        try:
+            cur.execute(sql)
+            conn.commit()
+        except:
+            logger.log_error("sql excute error:\nsql:%s\nhargs:%s" % (sql, ())
         return conn, cur
             
     @mysql_retry_func("failed to execute sql to host %s, db %s" % (db_settings.host, db_settings.database))
